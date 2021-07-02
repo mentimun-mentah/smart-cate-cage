@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "0.0.0.0:3002:3000"
+      - "0.0.0.0:3005:3005"
     volumes:
       - "/app/node_modules"
       - ".:/app"

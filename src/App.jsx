@@ -134,7 +134,7 @@ const App = () => {
                         />
                       </Form.Item>
                       <Form.Item className="text-center">
-                        <p className="text-center fw-bold">Buang Sisa Makanan</p>
+                        <p className="text-center fw-bold">Ganti Pasir</p>
                         <Switch 
                           checkedChildren="On"
                           unCheckedChildren="Off"
@@ -143,7 +143,7 @@ const App = () => {
                         />
                       </Form.Item>
                       <Form.Item className="text-center">
-                        <p className="text-center fw-bold">Ganti Pasir</p>
+                        <p className="text-center fw-bold">Buang Sisa Makanan</p>
                         <Switch 
                           checkedChildren="On"
                           unCheckedChildren="Off"
