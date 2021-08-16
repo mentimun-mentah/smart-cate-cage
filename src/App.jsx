@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Row, Col, Form, notification, Switch } from "antd";
+import { Row, Col, Form, notification, Switch, TimePicker, Button } from "antd";
 
 import isEqual from "validator/lib/equals";
 import isEmpty from "validator/lib/isEmpty";
@@ -164,6 +164,41 @@ const App = () => {
                   </Col>
                 </Row>
               </Container>
+
+              <hr />
+
+              <Container>
+                <Row gutter={[0, 0]} justify="center">
+                  <Col xxl={10} xl={10} lg={12} md={24} sm={24} xs={24}>
+                    <Form layout="vertical" className="mt-3">
+                      <Form.Item className="text-center">
+                        <p className="text-center fw-bold">Memberi Makan Otomatis</p>
+                        <TimePicker.RangePicker
+                          format="HH:mm"
+                          inputReadOnly
+                          placeholder={['Pagi', 'Sore']}
+                          onChange={val => console.log(val)}
+                        />
+                      </Form.Item>
+
+                      <Form.Item className="text-center">
+                        <p className="text-center fw-bold">Memberi Minum Otomatis</p>
+                        <TimePicker.RangePicker
+                          format="HH:mm"
+                          inputReadOnly
+                          placeholder={['Pagi', 'Sore']}
+                          onChange={val => console.log(val)}
+                        />
+                      </Form.Item>
+
+                      <Form.Item className="text-center">
+                        <Button type="primary">Simpan</Button>
+                      </Form.Item>
+                    </Form>
+                  </Col>
+                </Row>
+              </Container>
+
             </>
           ) : (
             <Login 
