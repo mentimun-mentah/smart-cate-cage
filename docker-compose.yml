@@ -10,3 +10,17 @@ services:
     volumes:
       - "/app/node_modules"
       - ".:/app"
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "0.0.0.0:3006:3006"
+    volumes:
+      - "/app/node_modules"
+      - "./server:/app"
+  redis-server:
+    image: "redis"
+    sysctls:
+      - net.core.somaxconn=511

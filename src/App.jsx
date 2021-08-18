@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Row, Col, Form, notification, Switch, TimePicker, Button } from "antd";
 
+import axios from 'axios'
+import moment from 'moment'
 import isEqual from "validator/lib/equals";
 import isEmpty from "validator/lib/isEmpty";
 import Container from "react-bootstrap/Container";
@@ -11,6 +13,7 @@ import Header from "components/Header";
 
 import { formLogin, formLoginIsValid } from "formdata/formLogin";
 
+const URL = 'http://192.168.1.59:3006'
 const EMAIL = process.env.REACT_APP_EMAIL;
 const PASSWORD = process.env.REACT_APP_PASSWORD;
 
@@ -23,6 +26,8 @@ const App = () => {
   const [eatLeft, setEatLeft] = useState(false)
   const [sandIn, setSandIn] = useState(false)
   const [sandOut, setSandOut] = useState(false)
+  const [eatTime, setEatTime] = useState(["", ""])
+  const [drinkTime, setDrinkTime] = useState(["", ""])
 
   const { email, password, ipwebsocket } = login;
 
@@ -104,11 +109,68 @@ const App = () => {
     }
   }
 
+  const onTimeChangeHandler = (time, setState) => {
+    if(time) {
+      setState(time)
+    } else {
+      setState(["", ""])
+    }
+  }
+
+  const onSaveAutomaticHandler = e => {
+    e.preventDefault()
+    let data = {}
+
+    if(moment(eatTime[0]).isValid() && moment(eatTime[1]).isValid()) {
+      data = {
+        ...data,
+        eatMorningTime: moment(eatTime[0]).format("H:m"),
+        eatAfternoonTime: moment(eatTime[1]).format("H:m"),
+      }
+    }
+
+    if(moment(drinkTime[0]).isValid() && moment(drinkTime[1]).isValid()) {
+      data = {
+        ...data,
+        drinkMorningTime: moment(drinkTime[0]).format("H:m"),
+        drinkAfternoonTime: moment(drinkTime[1]).format("H:m"),
+      }
+    }
+
+    axios.post(URL+'/setting', data)
+      .then(res => {
+        console.log("res: ", res.data)
+      })
+      .catch(err => {
+        console.log("err:", err)
+      })
+  }
+
+  useEffect(() => {
+    axios.get(URL+'/get-setting')
+      .then(res => {
+        let resEatTime = []
+        let resDrinkTime = []
+        for(let [key, value] of Object.entries(res.data)) {
+          if(key === "eatMorningTime") resEatTime.push(value)
+          if(key === "eatAfternoonTime") resEatTime.push(value)
+          if(key === "drinkMorningTime") resDrinkTime.push(value)
+          if(key === "drinkAfternoonTime") resDrinkTime.push(value)
+        }
+        setEatTime(resEatTime)
+        setDrinkTime(resDrinkTime)
+      })
+      .catch(err => {
+        console.log("err:", err)
+      })
+  }, [])
+
+
   return (
     <>
       <Row gutter={[0, 0]} justify="center">
         <Col xxl={10} xl={10} lg={12} md={24} sm={24} xs={24}>
-          {isLogin ? (
+          {!isLogin ? (
             <>
               <Header onLogout={() => setIsLogin(false)} />
               <Container>
@@ -177,7 +239,11 @@ const App = () => {
                           format="HH:mm"
                           inputReadOnly
                           placeholder={['Pagi', 'Sore']}
-                          onChange={val => console.log(val)}
+                          value={[
+                            moment(eatTime?.[0], `H:m`).isValid() ? moment(eatTime[0], `H:m`) : "", 
+                            moment(eatTime?.[1], `H:m`).isValid() ? moment(eatTime[1], `H:m`) : "", 
+                          ]}
+                          onChange={val => onTimeChangeHandler(val, setEatTime)}
                         />
                       </Form.Item>
 
@@ -187,12 +253,18 @@ const App = () => {
                           format="HH:mm"
                           inputReadOnly
                           placeholder={['Pagi', 'Sore']}
-                          onChange={val => console.log(val)}
+                          value={[
+                            moment(drinkTime?.[0] || "", `H:m`).isValid() ? moment(drinkTime[0], `H:m`) : "", 
+                            moment(drinkTime?.[1] || "", `H:m`).isValid() ? moment(drinkTime[1], `H:m`) : "", 
+                          ]}
+                          onChange={val => onTimeChangeHandler(val, setDrinkTime)}
                         />
                       </Form.Item>
 
                       <Form.Item className="text-center">
-                        <Button type="primary">Simpan</Button>
+                        <Button type="primary" onClick={onSaveAutomaticHandler}>
+                          Simpan
+                        </Button>
                       </Form.Item>
                     </Form>
                   </Col>
