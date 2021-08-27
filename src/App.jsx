@@ -68,6 +68,12 @@ const App = () => {
         const wsURL = `ws://${ipwebsocket.value}:81`
         const dataWs = new ReconnectingWebSocket(wsURL)
         setWs(dataWs)
+
+        const ipws = { ipws: `ws://${ipwebsocket.value}:81` }
+
+        axios.post(URL+'/set-ip-websocket', ipws)
+          .then(res => { console.log(res?.data) })
+          .catch(err => { console.log(err?.response) })
       }
     }
   }
@@ -170,7 +176,7 @@ const App = () => {
     <>
       <Row gutter={[0, 0]} justify="center">
         <Col xxl={10} xl={10} lg={12} md={24} sm={24} xs={24}>
-          {!isLogin ? (
+          {isLogin ? (
             <>
               <Header onLogout={() => setIsLogin(false)} />
               <Container>

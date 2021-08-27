@@ -20,7 +20,8 @@
     "reconnecting-websocket": "^4.4.0",
     "redis": "^3.1.2",
     "validator": "^13.6.0",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "websocket-heartbeat-js": "^1.0.13"
   },
   "scripts": {
     "start": "PORT=3005 react-scripts start",
