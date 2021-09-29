@@ -2,9 +2,11 @@ FROM node:slim
 
 WORKDIR /app
 
-COPY package.json .
-COPY package-lock.json .
+RUN chmod -R 777 ./
+
+COPY --chown=node:node package.json .
+COPY --chown=node:node package-lock.json .
 RUN npm install
-COPY . .
+COPY --chown=node:node . .
 
 CMD ["npm","start"]

@@ -27,7 +27,7 @@ client.on("error", (err) => {
   console.log("REDIS ERROR ".repeat(5));
 });
 
-const ipwebsocket = '192.168.1.176'
+const ipwebsocket = '192.168.18.176'
 const wsURL = `ws://${ipwebsocket}:81`
 
 const ws = new WebSocket(wsURL)
